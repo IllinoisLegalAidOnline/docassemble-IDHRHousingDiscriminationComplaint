@@ -57,7 +57,7 @@ code: |
   nav.set_section('section_discrimination_info')
   set_progress(20)
   basis_list
-  discrim_housing_opp
+  #discrim_housing_opp
   set_progress(35)
   discrim_description
   discrim_date
@@ -163,9 +163,9 @@ question: |
 subquestion: |
   Welcome to Illinois Legal Aid Online's **Housing discrimination complaint - IDHR** Easy Form.
 
-  This program helps you make a Housing/Real Estate Transaction Complainant Information Sheet to file with the Illinois Department of Human Rights (IDHR).
+  This program helps you make a Housing or Real Estate Transaction Complainant Information Sheet to file with the Illinois Department of Human Rights (IDHR).
   
-  To learn more, read ILAO's article about [**housing discrimination**](https://www.illinoislegalaid.org/node/31021).
+  To learn more, see ILAO's article about [**housing discrimination**](https://www.illinoislegalaid.org/node/31021).
 field: sees_nav_bar
 ---
 id: instructions
@@ -270,7 +270,7 @@ template: protected_class_identity_help
 subject: |
   **What if I'm not sure?**
 content: |  
-  If you don't know whether the discrimination you suffered fits into one of these categories, call IDHR's telephone inquiry line at (312) 814-4320.
+  If you don't know whether the discrimination you suffered fits into one of these categories, call IDHR's telephone inquiry line at <a href="tel:312-814-4320">**(312) 814-4320 :phone:**</a>.
   
   * **Ancestry** means your grandparents, great grandparents, and other relatives who came before you (your ancestors).
   * **National origin** means the country or region you or your ancestors came from.
@@ -283,10 +283,9 @@ question: |
   Is the property in Illinois?
 subquestion: |
   To file a complaint with IDHR, the property related to the discrimination against you must be located in Illinois.
-field: property_in_il
-choices:
-  - Yes: True
-  - No: False
+fields: 
+  - no label: property_in_il
+    datatype: yesnoradio
 ---
 id: property address
 question: |
@@ -308,6 +307,8 @@ fields:
   - ZIP code: subject_property.zip
     required: False
   - County: subject_property.county
+    #code: |
+    #  il_county_list
 ---
 template: county_help
 subject: |
@@ -362,11 +363,13 @@ validation code: |
 id: owner occupied
 question: |
   Does the owner live on the property?
-field: owner_occupied
-choices:
-  - Yes: True
-  - No: False
-  - I don't know: False
+fields: 
+  - no label: owner_occupied
+    input type: radio
+    choices:
+      - Yes: True
+      - No: False
+      - I don't know: False
 ---
 id: number of units
 question: |
@@ -381,45 +384,47 @@ fields:
 id: property still available
 question: |
   Is the property still available?
-field: property_still_available
-choices:
-  - Yes: yes
-  - No: no
-  - I don't know: idk
----
-id: discrimination type
-question: |
-  What happened to you?
-subquestion: |
-  Check all that apply. You can explain how you were discriminated against on another screen.
-    
-  Finish this sentence: "I was ..."
 fields: 
-  - Refused an opportunity to rent or buy housing or told housing was not available when it was.: discrim_housing_opp
-    datatype: yesnowide
-  - Refused a request to accommodate policies or practices or modify housing because of a disability.: discrim_accommodation
-    datatype: yesnowide
-  - Discriminated against in the terms or conditions of sale, rental occupancy, or in services or facilities.: discrim_terms
-    datatype: yesnowide
-  - Discriminated against in financing or denied a mortgage loan.: discrim_financing
-    datatype: yesnowide
-  - Discriminated against in the appraisal process.: discrim_appraisal
-    datatype: yesnowide
-  - Discriminated against in broker's services.: discrim_broker
-    datatype: yesnowide
-  - Treated differently than others seeking housing.: discrim_treated_different
-    datatype: yesnowide
-  - Intimidated or interfered or coerced in the exercise of my housing rights.: discrim_exercise
-    datatype: yesnowide
-  - Discriminated against in another way.: discrim_other_way
-    datatype: yesnowide
-  - Short description of what happened: discrim_other_text
-    help: |
-      Give a short description of what you tried to do. For example, "I was denied a chance to rent an apartment," or "I was turned away when I applied for housing assistance."
-    maxlength: 150
-    show if: 
-      variable: discrim_other_way
-      is: True
+  - no label: property_still_available
+    input type: radio
+    choices:
+      - Yes: yes
+      - No: no
+      - I don't know: idk
+---
+#id: discrimination type
+#question: |
+#  What happened to you?
+#subquestion: |
+#  Check all that apply. You can explain how you were discriminated against on another screen.
+#    
+#  Finish this sentence: "I was ..."
+#fields: 
+#  - Refused an opportunity to rent or buy housing or told housing was not available when it was.: discrim_housing_opp
+#    datatype: yesnowide
+#  - Refused a request to accommodate policies or practices or modify housing because of a disability.: discrim_accommodation
+#    datatype: yesnowide
+#  - Discriminated against in the terms or conditions of sale, rental occupancy, or in services or facilities.: discrim_terms
+#    datatype: yesnowide
+#  - Discriminated against in financing or denied a mortgage loan.: discrim_financing
+#    datatype: yesnowide
+#  - Discriminated against in the appraisal process.: discrim_appraisal
+#    datatype: yesnowide
+#  - Discriminated against in broker's services.: discrim_broker
+#    datatype: yesnowide
+#  - Treated differently than others seeking housing.: discrim_treated_different
+#    datatype: yesnowide
+#  - Intimidated or interfered or coerced in the exercise of my housing rights.: discrim_exercise
+#    datatype: yesnowide
+#  - Discriminated against in another way.: discrim_other_way
+#    datatype: yesnowide
+#  - Short description of what happened: discrim_other_text
+#    help: |
+#      Give a short description of what you tried to do. For example, "I was denied a chance to rent an apartment," or "I was turned away when I applied for housing assistance."
+#    maxlength: 150
+#    show if: 
+#      variable: discrim_other_way
+#      is: True
 ---
 id: discrimination description
 question: |
@@ -432,10 +437,11 @@ subquestion: |
   ${ collapse_template(description_help) }  
 
 fields:
-  - label: What happened
+  - label: "What happened:"
+    label above field: True
     field: discrim_description
     datatype: area
-    rows: 10
+    rows: 15
     maxlength: 1500
 ---
 template: description_help
@@ -488,9 +494,10 @@ subquestion: |
 
 fields:
   - label: Reasons for discrimination
+    label above field: True
     field: discrim_basis
     datatype: area
-    rows: 10
+    rows: 12
     maxlength: 1000
 ---
 template: discrim_basis_example_help
@@ -634,10 +641,9 @@ subquestion: |
   IDHR will try to contact up to 2 other people if they can't reach you.
   
   You will need to enter their phone number. You can also enter their address if you know it.
-field: has_alt_contact
-choices:
-  - Yes: True
-  - No: False
+fields: 
+  - no label: has_alt_contact
+    datatype: yesnoradio
 ---
 sets:
   - alt_contacts[i].name.first
@@ -653,10 +659,9 @@ sets:
   - knows_alt_address[i]
 question: |
   Do you know ${ alt_contacts[i].name_full() }'s address?
-field: knows_alt_address[i]
-choices:
-  - Yes: True
-  - No: False
+fields: 
+  - no label: knows_alt_address[i]
+    datatype: yesnoradio
 ---
 id: alt contacts address
 sets:
@@ -691,18 +696,16 @@ question: |
   Do you want to add another contact?
 subquestion: |
   So far, you listed ${ alt_contacts[0].name_full() }.
-field: has_second_alt_contact
-choices:
-  - Yes: True
-  - No: False
+fields: 
+  - no label: has_second_alt_contact
+    datatype: yesnoradio
 ---
 id: filed other charges
 question: |
   Have you filed a charge of discrimination with any other agency?
-field: filed_other_charges
-choices:
-  - Yes: True
-  - No: False
+fields: 
+  - no label: filed_other_charges
+    datatype: yesnoradio
 ---
 id: other charge description
 question: |
@@ -712,8 +715,9 @@ subquestion: |
 fields:
   - label: Other charges filed
     field: other_charges_text
+    maxlength: 200
     datatype: area
-    rows: 2
+    rows: 6
 ---
 id: statistical info intro
 continue button field: stats_info
@@ -747,7 +751,8 @@ fields:
   - label: Learned about IDHR from
     field: how_learn_about_idhr
     datatype: area
-    rows: 2
+    maxlength: 200
+    rows: 6
     required: False
 ---
 template: hear_about_idhr_help
@@ -854,7 +859,7 @@ code: |
   housing_cis.enabled = False
   housing_cis_addendum.enabled = False
 
-  if len(discrim_description) > 400 or len(discrim_basis) > 300:
+  if len(discrim_description) > 1100 or len(discrim_basis) > 500:
     instructions.enabled = True
     housing_cis.enabled = True
     housing_cis_addendum.enabled = True
@@ -895,20 +900,20 @@ attachment:
       - "alt_contact_2_full_address": ${ alt_contacts[1].address.on_one_line(bare=True) if (has_second_alt_contact and knows_alt_address[1]) else '' }
       - "alt_contact_2_name": ${ alt_contacts[1].name_full() if has_second_alt_contact else '' }
       - "alt_contact_2_phone": ${ phone_number_formatted(alt_contacts[1].phone_number) if has_second_alt_contact else ''}
-      - "discrim_basis": ${ discrim_basis if len(discrim_basis) <= 300 else 'See attached addendum.'}
-      - "discrim_broker_services_cb": ${ discrim_broker }
+      - "discrim_basis": ${ discrim_basis if len(discrim_basis) <= 500 else 'See attached addendum.'}
+      #- "discrim_broker_services_cb": ${ discrim_broker }
       - "discrim_date_latest": ${ discrim_date.format("MM-dd-yyyy") }
-      - "discrim_appraisal_cb": ${ discrim_appraisal }
-      - "discrim_description": ${ discrim_description if len(discrim_description) <= 400 else 'See attached addendum.' }
-      - "discrim_exercise_cb": ${ discrim_exercise }
-      - "discrim_financing_cb": ${ discrim_financing }
+      #- "discrim_appraisal_cb": ${ discrim_appraisal }
+      - "discrim_description": ${ discrim_description if len(discrim_description) <= 1100 else 'See attached addendum.' }
+      #- "discrim_exercise_cb": ${ discrim_exercise }
+      #- "discrim_financing_cb": ${ discrim_financing }
       - "discrim_ongoing_no": ${ discrim_ongoing == False }
       - "discrim_ongoing_yes": ${ discrim_ongoing }
-      - "discrim_other": ${ discrim_other_text if discrim_other_way else '' }
-      - "discrim_refused_accommodation_cb": ${ discrim_accommodation }
-      - "discrim_refused_housing_opp_cb": ${ discrim_housing_opp }
-      - "discrim_terms_cb": ${ discrim_terms }
-      - "discrim_treated_different_cb": ${ discrim_treated_different }
+      #- "discrim_other": ${ discrim_other_text if discrim_other_way else '' }
+      #- "discrim_refused_accommodation_cb": ${ discrim_accommodation }
+      #- "discrim_refused_housing_opp_cb": ${ discrim_housing_opp }
+      #- "discrim_terms_cb": ${ discrim_terms }
+      #- "discrim_treated_different_cb": ${ discrim_treated_different }
       - "email_notice_consent_cb": ${ email_notice_consent }
       - "housing_number_units": ${ number_units if kind_apartment else "" }
       - "housing_type_apt_cb": ${ kind_apartment }
@@ -966,9 +971,8 @@ attachment:
   pdf template file: idhr_addendum.pdf
   fields:
       - "user_name": ${ users[0].name_full() }
-      - "discrim_basis": ${ discrim_basis if len(discrim_basis) > 300 else '' }
-      - "discrim_description": ${ discrim_description if len(discrim_description) > 400 else '' }
-
+      - "discrim_basis": ${ discrim_basis if len(discrim_basis) > 500 else '' }
+      - "discrim_description": ${ discrim_description if len(discrim_description) > 1100 else '' }
 ---
 ############### Review page
 id: review screen
@@ -1022,7 +1026,7 @@ review:
       ${ word(yesno(owner_occupied)) }      
   - Edit: number_units
     button: |
-      **Number of units in the property: **
+      **Number of units in the property:**
       ${ number_units }
     show if: kind_apartment
   - Edit: property_still_available
@@ -1035,42 +1039,42 @@ review:
       % else:
       I don't know
       % endif      
-  - Edit: discrim_housing_opp
-    button: |
-      **What happened?** I was...
-      
-      % if discrim_housing_opp == True:
-        * Refused an opportunity to rent or buy housing or told housing was not available when it was.
-      % endif
-      % if discrim_accommodation == True:
-        * Refused a request to accommodate policies or practices or modify housing because of a disability.
-      % endif
-      % if discrim_terms == True:
-        * Discriminated against in the terms or conditions of sale, rental occupancy, or in services or facilities.
-      % endif
-      % if discrim_financing == True:
-        * Discriminated against in financing or denied a mortgage loan.
-      % endif
-      % if discrim_appraisal == True:
-        * Discriminated against in the appraisal process.
-      % endif
-      % if discrim_broker == True:
-        * Discriminated against in broker's services.
-      % endif
-      % if discrim_treated_different == True:
-        * Treated differently than others seeking housing.
-      % endif
-      % if discrim_exercise == True:
-        * Intimidated or interfered or coerced in the exercise of my housing rights.
-      % endif
-      % if discrim_other_way == True:
-        * Discriminated against in another way.
-      % endif
-  - Edit: discrim_other_text
-    button: |
-      **Other discrimination:**
-      ${ discrim_other_text }
-    show if: discrim_other_way
+  #- Edit: discrim_housing_opp
+  #  button: |
+  #    **What happened?** I was...
+  #    
+  #    % if discrim_housing_opp == True:
+  #      * Refused an opportunity to rent or buy housing or told housing was not available when it was.
+  #    % endif
+  #    % if discrim_accommodation == True:
+  #      * Refused a request to accommodate policies or practices or modify housing because of a disability.
+  #    % endif
+  #    % if discrim_terms == True:
+  #      * Discriminated against in the terms or conditions of sale, rental occupancy, or in services or facilities.
+  #    % endif
+  #    % if discrim_financing == True:
+  #      * Discriminated against in financing or denied a mortgage loan.
+  #    % endif
+  #    % if discrim_appraisal == True:
+  #      * Discriminated against in the appraisal process.
+  #    % endif
+  #    % if discrim_broker == True:
+  #      * Discriminated against in broker's services.
+  #    % endif
+  #    % if discrim_treated_different == True:
+  #      * Treated differently than others seeking housing.
+  #    % endif
+  #    % if discrim_exercise == True:
+  #      * Intimidated or interfered or coerced in the exercise of my housing rights.
+  #    % endif
+  #    % if discrim_other_way == True:
+  #      * Discriminated against in another way.
+  #    % endif
+  #- Edit: discrim_other_text
+  #  button: |
+  #    **Other discrimination:**
+  #    ${ discrim_other_text }
+  #  show if: discrim_other_way
   - Edit: discrim_description
     button: |
       **How were you discriminated against?**
@@ -1315,7 +1319,7 @@ review:
       ${ word(yesno(owner_occupied)) }      
   - Edit: number_units
     button: |
-      **Number of units in the property: **
+      **Number of units in the property:**
       ${ number_units }
     show if: kind_apartment
   - Edit: property_still_available
@@ -1338,42 +1342,42 @@ question: |
 subquestion: |
   Edit your answers below.
 review:
-  - Edit: discrim_housing_opp
-    button: |
-      **What happened?** I was...
-      
-      % if discrim_housing_opp == True:
-        * Refused an opportunity to rent or buy housing or told housing was not available when it was.
-      % endif
-      % if discrim_accommodation == True:
-        * Refused a request to accommodate policies or practices or modify housing because of a disability.
-      % endif
-      % if discrim_terms == True:
-        * Discriminated against in the terms or conditions of sale, rental occupancy, or in services or facilities.
-      % endif
-      % if discrim_financing == True:
-        * Discriminated against in financing or denied a mortgage loan.
-      % endif
-      % if discrim_appraisal == True:
-        * Discriminated against in the appraisal process.
-      % endif
-      % if discrim_broker == True:
-        * Discriminated against in broker's services.
-      % endif
-      % if discrim_treated_different == True:
-        * Treated differently than others seeking housing.
-      % endif
-      % if discrim_exercise == True:
-        * Intimidated or interfered or coerced in the exercise of my housing rights.
-      % endif
-      % if discrim_other_way == True:
-        * Discriminated against in another way.
-      % endif
-  - Edit: discrim_other_text
-    button: |
-      **Other discrimination:**
-      ${ discrim_other_text }
-    show if: discrim_other_way
+  #- Edit: discrim_housing_opp
+  #  button: |
+  #    **What happened?** I was...
+  #    
+  #    % if discrim_housing_opp == True:
+  #      * Refused an opportunity to rent or buy housing or told housing was not available when it was.
+  #    % endif
+  #    % if discrim_accommodation == True:
+  #      * Refused a request to accommodate policies or practices or modify housing because of a disability.
+  #    % endif
+  #    % if discrim_terms == True:
+  #      * Discriminated against in the terms or conditions of sale, rental occupancy, or in services or facilities.
+  #    % endif
+  #    % if discrim_financing == True:
+  #      * Discriminated against in financing or denied a mortgage loan.
+  #    % endif
+  #    % if discrim_appraisal == True:
+  #      * Discriminated against in the appraisal process.
+  #    % endif
+  #    % if discrim_broker == True:
+  #      * Discriminated against in broker's services.
+  #    % endif
+  #    % if discrim_treated_different == True:
+  #      * Treated differently than others seeking housing.
+  #    % endif
+  #    % if discrim_exercise == True:
+  #      * Intimidated or interfered or coerced in the exercise of my housing rights.
+  #    % endif
+  #    % if discrim_other_way == True:
+  #      * Discriminated against in another way.
+  #    % endif
+  #- Edit: discrim_other_text
+  #  button: |
+  #    **Other discrimination:**
+  #    ${ discrim_other_text }
+  #  show if: discrim_other_way
   - Edit: discrim_description
     button: |
       **How were you discriminated against?**
